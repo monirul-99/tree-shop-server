@@ -3,7 +3,7 @@ const cors = require("cors");
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 require("dotenv").config();
 const app = express();
-const jwt = require("jsonwebtoken");
+// const jwt = require("jsonwebtoken");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 //middle ware
@@ -21,22 +21,21 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     const allCardDataCollection = client
-      .db("Tree-Shop")
-      .collection("Tree-Card-Data");
+      .db("TreeShopSeconds")
+      .collection("TreeShopSecondsData");
     const allCartOrdersCollection = client
-      .db("Tree-Shop")
+      .db("TreeShopSeconds")
       .collection("Orders-Products");
     const allWishListProductsCollection = client
-      .db("Tree-Shop")
+      .db("TreeShopSeconds")
       .collection("WishList-Products");
     const allCartPaymentsCollection = client
-      .db("Tree-Shop")
+      .db("TreeShopSeconds")
       .collection("Orders-Products-Payments");
 
     app.get("/card-data", async (req, res) => {
       const page = parseInt(req.query.page);
       const size = parseInt(req.query.size);
-      console.log(page, size);
       const query = {};
       const cursor = allCardDataCollection.find(query);
       const result = await cursor
@@ -114,6 +113,7 @@ async function run() {
       const result = await allCartOrdersCollection.find(query).toArray();
       res.send(result);
     });
+
     app.get("/wishlist-products", async (req, res) => {
       const query = {};
       const result = await allWishListProductsCollection.find(query).toArray();
